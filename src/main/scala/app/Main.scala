@@ -2,7 +2,7 @@ package app
 
 import app.Program.Preprocessor
 
-object Main extends App{
+object Main extends App {
 
   Preprocessor.init.input.filter.output
 //  another sequention of computation is just wrong - this is guaranteed on compilation step (not runtime!)
