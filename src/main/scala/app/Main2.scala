@@ -22,7 +22,7 @@ object Program2 {
   sealed trait FiltrationState extends BasicState
   sealed trait OutputState extends BasicState
 
-  sealed trait Data[D <: Data[D]]
+  sealed trait Data[D <: Data[D]] // todo: explain why is it better than just Data[D]
   case class InitData(filePath: Path) extends Data[InitData]
   case class InputData(input: List[String]) extends Data[InputData]
   case class FilterData(filtered: List[String]) extends Data[FilterData]
