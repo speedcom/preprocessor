@@ -43,7 +43,6 @@ object Program2 {
 
     def input[T >: State <: InitState]: InitData => (InputData, Preprocessor[InputState]) = {
       data =>
-        def fakeReadFile(path: String): List[String] = List("lorem", "ipsum", "dolores")
         val input = fakeReadFile(data.filePath)
         (InputData(input), new PreprocessorInput)
     }
@@ -62,4 +61,5 @@ object Program2 {
 
   }
 
+  def fakeReadFile(path: String): List[String] = List("lorem", "ipsum", "dolores")
 }
