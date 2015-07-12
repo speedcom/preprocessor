@@ -22,7 +22,7 @@ object Program2 {
   sealed trait FiltrationState extends BasicState
   sealed trait OutputState extends BasicState
 
-  sealed trait Data[D <: Data[D]] // todo: explain why is it better than just Data[D]
+  sealed trait Data[D <: Data[D]] { self: D => }
   case class InitData(filePath: Path) extends Data[InitData]
   case class InputData(input: List[String]) extends Data[InputData]
   case class FilterData(filtered: List[String]) extends Data[FilterData]
@@ -35,28 +35,24 @@ object Program2 {
     }
   }
   
-  class PreprocessorInput extends Preprocessor[InputState]
-  class PreprocessorFilter extends Preprocessor[FiltrationState]
-  class PreprocessorOutput extends Preprocessor[OutputState]
-
   trait Preprocessor[+State <: BasicState] {
 
     def input[T >: State <: InitState]: InitData => (InputData, Preprocessor[InputState]) = {
       data =>
         val input = fakeReadFile(data.filePath)
-        (InputData(input), new PreprocessorInput)
+        (InputData(input), new Preprocessor[InputState] {})
     }
     
     def filter[T >: State <: InputState]: InputData => (FilterData, Preprocessor[FiltrationState]) = {
       data =>
         val filtered = data.input.filter(_.size > 5)
-        (FilterData(filtered), new PreprocessorFilter)
+        (FilterData(filtered), new Preprocessor[FiltrationState] {})
     }
 
     def output[T >: State <: FiltrationState]: FilterData => (OutputData, Preprocessor[OutputState]) = { 
       data =>
         val output = data.filtered.headOption.getOrElse("ERROR - NO RESULT")
-        (OutputData(output), new PreprocessorOutput)
+        (OutputData(output), new Preprocessor[OutputState] {})
     }
 
   }
